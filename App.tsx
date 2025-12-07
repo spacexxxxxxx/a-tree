@@ -6,6 +6,39 @@ import { GoogleGenAI } from "@google/genai";
 
 type WishStage = 'idle' | 'input' | 'loading' | 'result';
 
+// Move PremiumButton outside to prevent re-mounting on every render
+const PremiumButton = ({ onClick, label, icon }: { onClick: () => void, label: string, icon?: string }) => (
+  <button 
+    onClick={onClick}
+    className="group relative overflow-hidden transition-all duration-500 ease-out"
+  >
+    {/* Button Background Gradient */}
+    <div className="absolute inset-0 bg-gradient-to-r from-[#BF953F] via-[#FBF5B7] to-[#BF953F] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+    {/* Button Border */}
+    <div className="absolute inset-0 border border-yellow-500/30 group-hover:border-transparent transition-colors duration-500"></div>
+
+    <div className="relative px-5 md:px-6 py-2.5 md:py-3 flex items-center gap-2">
+       <span className="font-['Bodoni_Moda'] text-yellow-100 text-[10px] md:text-xs tracking-[0.2em] uppercase group-hover:text-[#020202] transition-colors duration-500 font-semibold">
+         {label}
+       </span>
+       {icon && (
+         <span className="text-yellow-500 group-hover:text-[#020202] text-sm transition-colors duration-500">{icon}</span>
+       )}
+    </div>
+    
+    {/* Shimmer Effect */}
+    <div className="absolute top-0 -inset-full h-full w-1/2 z-5 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white opacity-20 group-hover:animate-shine" />
+  </button>
+);
+
+// Move styles outside or useMemo inside
+const metallicTextStyle = {
+  background: 'linear-gradient(to bottom, #FBF5B7 0%, #BF953F 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%)',
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+  filter: 'drop-shadow(0px 0px 5px rgba(255, 215, 0, 0.5))'
+};
+
 function App() {
   const [stage, setStage] = useState<WishStage>('idle');
   const [wishInput, setWishInput] = useState('');
@@ -98,39 +131,6 @@ function App() {
   };
 
   const isWishMode = stage !== 'idle';
-
-  // Metallic Text Style
-  const metallicTextStyle = {
-    background: 'linear-gradient(to bottom, #FBF5B7 0%, #BF953F 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%)',
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent',
-    filter: 'drop-shadow(0px 0px 5px rgba(255, 215, 0, 0.5))'
-  };
-
-  // Reusable Premium Button Component (Internal)
-  const PremiumButton = ({ onClick, label, icon }: { onClick: () => void, label: string, icon?: string }) => (
-    <button 
-      onClick={onClick}
-      className="group relative overflow-hidden transition-all duration-500 ease-out"
-    >
-      {/* Button Background Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#BF953F] via-[#FBF5B7] to-[#BF953F] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-      {/* Button Border */}
-      <div className="absolute inset-0 border border-yellow-500/30 group-hover:border-transparent transition-colors duration-500"></div>
-
-      <div className="relative px-5 md:px-6 py-2.5 md:py-3 flex items-center gap-2">
-         <span className="font-['Bodoni_Moda'] text-yellow-100 text-[10px] md:text-xs tracking-[0.2em] uppercase group-hover:text-[#020202] transition-colors duration-500 font-semibold">
-           {label}
-         </span>
-         {icon && (
-           <span className="text-yellow-500 group-hover:text-[#020202] text-sm transition-colors duration-500">{icon}</span>
-         )}
-      </div>
-      
-      {/* Shimmer Effect */}
-      <div className="absolute top-0 -inset-full h-full w-1/2 z-5 block transform -skew-x-12 bg-gradient-to-r from-transparent to-white opacity-20 group-hover:animate-shine" />
-    </button>
-  );
 
   return (
     <div className="w-full h-screen bg-[#020202] text-white relative overflow-hidden font-sans selection:bg-yellow-500/30">
@@ -367,7 +367,7 @@ function App() {
                     ></div>
                  </div>
                  
-                 {/* Loading subtext (Removed probability/stats) */}
+                 {/* Loading subtext */}
                  <div className="flex justify-between font-mono text-[9px] text-yellow-500/70 tracking-widest uppercase">
                     <span>Consulting the Ancients...</span>
                     <span>{loadingProgress.toFixed(0)}%</span>

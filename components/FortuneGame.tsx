@@ -18,6 +18,13 @@ interface Target {
   collected: boolean;
 }
 
+interface CoinTargetProps {
+  position: THREE.Vector3;
+  char: string;
+  fontUrl: string;
+  onCollect: () => void;
+}
+
 const FortuneGame: React.FC<FortuneGameProps> = ({ active, onCollect, onFinish }) => {
   const [targets, setTargets] = useState<Target[]>([]);
   const [score, setScore] = useState(0);
@@ -92,7 +99,7 @@ const FortuneGame: React.FC<FortuneGameProps> = ({ active, onCollect, onFinish }
 };
 
 // Sub-component for the individual Coin target (Bitcoin style)
-const CoinTarget = ({ position, char, fontUrl, onCollect }: { position: THREE.Vector3, char: string, fontUrl: string, onCollect: () => void }) => {
+const CoinTarget: React.FC<CoinTargetProps> = ({ position, char, fontUrl, onCollect }) => {
     const meshRef = useRef<THREE.Group>(null);
     const beaconRef = useRef<THREE.Mesh>(null);
     
